@@ -77,6 +77,23 @@ blogsRouter.delete("/:blogId", async (req, res, next) => {
   }
 })
 
+blogsRouter.post("/:blogId/comments", async (req,res,next)=>{
+  try {
+    
+    const updatedBlog = await BlogsModel.findByIdAndUpdate(
+      req.params.blogId, 
+      { $push: { comments: req.body } }, 
+      { new: true, runValidators: true } 
+    )
+    if (updatedBlog) {
+      res.send(updatedBlog)
+    } else {
+      next(createHttpError(404, `Blog with id ${req.params.blogId} not found!`))
+    }
 
+  } catch (error) {
+    next(error)
+  }
+})
 
 export default blogsRouter
