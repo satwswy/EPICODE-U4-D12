@@ -96,4 +96,18 @@ blogsRouter.post("/:blogId/comments", async (req,res,next)=>{
   }
 })
 
+blogsRouter.get("/:blogId/comments", async (req,res,next)=>{
+  try {
+    const blog = await BlogsModel.findById(req.params.blogId)
+    if(blog){
+      res.send(blog.comments)
+    }
+    else{
+      next(createHttpError(404, `Blog with id ${req.params.blogId} not found!`))
+    }
+  } catch (error) {
+    next (error)
+  }
+})
+
 export default blogsRouter
